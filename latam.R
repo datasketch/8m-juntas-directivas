@@ -25,23 +25,41 @@ total$genero <- plyr::revalue(total$genero, c("f" = "Mujeres", "m" = "Hombres"))
 
 orderTot <- total %>% group_by(name_esp, genero)%>% arrange(-total)
 h <- hgch_bar_CatCatNum(orderTot,
+                        tooltip = list(headerFormat = NULL,
+                                       pointFormat = "Total de <b>{series.name} en juntas directivas </b> en <b>'{point.category}' </b>: <b>{point.y}%</b>"),
                    orientation = "hor",
                   graphType = "stacked", percentage = TRUE,
                    order2 = unique(orderTot$name_esp),
                   horLabel = " ",  verLabel = " ",
-                  theme = tma(
+                  theme =  tma(
                     background = "#FFFFFF",
-                    colores = c("#00cab9", "#eb004a"),
+                    colores = c("#4B08B3",
+                                "#0EA5B8",
+                                "#562BFA",
+                                "#662AAF",
+                                "#1FACC6","#2BCEC1"),
                     fontFamily = "Lato",
-                    #fontSize = "20px",
+                    fontSize = "13px",
+                    plotBorderWidth = 0,
+                    bordercolor = "transparent",
+                    stylesTitleX = list(color = "#666666", fontSize = "17px"),
+                    stylesTitleY = list(color = "#666666", fontSize = "17px"),
                     stylesY = list(gridLineWidth = 0),
+                    stylesX = list(gridLineWidth = 0),
                     stylesLabelX = list(color = "#666666",
                                         fontSize = "15px", enabled = TRUE),
                     stylesLabelY = list(enabled = F),
-                    labsData = list(colLabel = "#0E0329", familyLabel = "Lato")
-                  ))
+                    labsData = list(colLabel = JS("(Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'"), familyLabel = "Lato")
+                  )) %>%
+  hc_plotOptions(
+    bar = list(
+      dataLabels = list(
+        format= '{y}%'
+      )))
+
 h
-saveWidget(h, "allCountries.html", selfcontained = FALSE, libdir = "countries/assets")
+saveWidget(h, "allCountries.html",
+           selfcontained = FALSE)
 
 
 total <- total %>% group_by(name_esp) %>% mutate(prop = round(total/sum(total)*100, 2))

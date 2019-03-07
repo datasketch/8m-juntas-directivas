@@ -13,16 +13,17 @@ library(htmlwidgets)
 x0 <- read_csv("data/Todas las mujeres - Consejeres.csv")
 
 countries <- unique(x0$País)
-
+x0 <- x0 %>% filter(País %in% countries[c(1:15)])
 
 for (country in countries) {
-  country <- 'Colombia'
-
+ # country <- countries[1]
   x <- x0 %>% filter(País == country) %>%
     rename(Género = `Género (f, m, nb, nd)`)
   x$Género <- plyr::revalue(x$Género, c("f" = "Mujeres", "m" = "Hombres"))
   table(x$Género)
 
+  country <- tolower(gsub(" ", "",country))
+  country <- iconv(country,from="UTF-8",to="ASCII//TRANSLIT")
   x <- x %>%
     filter(Género %in% c("Mujeres", "Hombres"))
 
@@ -35,11 +36,17 @@ for (country in countries) {
                 "#662AAF",
                 "#1FACC6","#2BCEC1"),
     fontFamily = "Lato",
+    fontSize = "13px",
+    plotBorderWidth = 0,
+    bordercolor = "transparent",
+    stylesTitleX = list(color = "#666666", fontSize = "17px"),
+    stylesTitleY = list(color = "#666666", fontSize = "17px"),
     stylesY = list(gridLineWidth = 0),
+    stylesX = list(gridLineWidth = 0),
     stylesLabelX = list(color = "#666666",
                         fontSize = "15px", enabled = TRUE),
     stylesLabelY = list(enabled = F),
-    labsData = list(colLabel = "#0E0329", familyLabel = "Lato")
+    labsData = list(colLabel = JS("(Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'"), familyLabel = "Lato")
   )
 
 
@@ -58,6 +65,9 @@ for (country in countries) {
                        tooltip =list(headerFormat = NULL, pointFormat = "<b>{point.name} consejeras mujeres en {point.y} empresas</b>"),
                        title = "",
                        theme = tma(
+                         fontSize = "17px",
+                         bordercolor = "transparent",
+                         plotBorderWidth = 0,
                          background = "#FFFFFF",
                          colores = c("#662AAF"),
                          fontFamily = "Lato",
@@ -66,6 +76,8 @@ for (country in countries) {
                          stylesLabelX = list(color = "#666666",
                                              fontSize = "15px", enabled = TRUE),
                          stylesLabelY = list(enabled = F),
+                         stylesTitleX = list(color = "#666666", fontSize = "17px"),
+                         stylesTitleY = list(color = "#666666", fontSize = "17px"),
                          labsData = list(colLabel = "#0E0329", familyLabel = "Lato")
                        ))
   h
@@ -135,7 +147,13 @@ for (country in countries) {
                           graphType = "stacked",
                           percentage = TRUE,
                           order2 = empresasTop,
-                          theme = mytheme)
+                          theme = mytheme) %>%
+    hc_plotOptions(
+      bar = list(
+        dataLabels = list(
+          format= '{y}%'
+      )))
+
 
   h
   saveWidget(h, paste0("countries/",mop::create_slug(country),"_3.html"), selfcontained = FALSE, libdir = "countries/assets")
@@ -156,7 +174,12 @@ for (country in countries) {
                           graphType = "stacked",
                           percentage = TRUE,
                           order2 = empresasBottom,
-                          theme = mytheme)
+                          theme = mytheme) %>%
+    hc_plotOptions(
+      bar = list(
+        dataLabels = list(
+          format= '{y}%'
+        )))
 
   h
   saveWidget(h, paste0("countries/",mop::create_slug(country),"_4.html"), selfcontained = FALSE, libdir = "countries/assets")
