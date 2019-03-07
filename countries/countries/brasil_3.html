@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<script src="assets/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="assets/jquery-1.11.1/jquery.min.js"></script>
+<script src="assets/proj4js-2.3.15/proj4.js"></script>
+<link href="assets/highcharts-7.0.1/css/motion.css" rel="stylesheet" />
+<link href="assets/highcharts-7.0.1/css/htmlwdgtgrid.css" rel="stylesheet" />
+<script src="assets/highcharts-7.0.1/highcharts.js"></script>
+<script src="assets/highcharts-7.0.1/highcharts-3d.js"></script>
+<script src="assets/highcharts-7.0.1/highcharts-more.js"></script>
+<script src="assets/highcharts-7.0.1/modules/stock.js"></script>
+<script src="assets/highcharts-7.0.1/modules/map.js"></script>
+<script src="assets/highcharts-7.0.1/modules/annotations.js"></script>
+<script src="assets/highcharts-7.0.1/modules/boost.js"></script>
+<script src="assets/highcharts-7.0.1/modules/data.js"></script>
+<script src="assets/highcharts-7.0.1/modules/drag-panes.js"></script>
+<script src="assets/highcharts-7.0.1/modules/drilldown.js"></script>
+<script src="assets/highcharts-7.0.1/modules/item-series.js"></script>
+<script src="assets/highcharts-7.0.1/modules/offline-exporting.js"></script>
+<script src="assets/highcharts-7.0.1/modules/overlapping-datalabels.js"></script>
+<script src="assets/highcharts-7.0.1/modules/exporting.js"></script>
+<script src="assets/highcharts-7.0.1/modules/export-data.js"></script>
+<script src="assets/highcharts-7.0.1/modules/funnel.js"></script>
+<script src="assets/highcharts-7.0.1/modules/heatmap.js"></script>
+<script src="assets/highcharts-7.0.1/modules/treemap.js"></script>
+<script src="assets/highcharts-7.0.1/modules/sankey.js"></script>
+<script src="assets/highcharts-7.0.1/modules/solid-gauge.js"></script>
+<script src="assets/highcharts-7.0.1/modules/streamgraph.js"></script>
+<script src="assets/highcharts-7.0.1/modules/sunburst.js"></script>
+<script src="assets/highcharts-7.0.1/modules/vector.js"></script>
+<script src="assets/highcharts-7.0.1/modules/wordcloud.js"></script>
+<script src="assets/highcharts-7.0.1/modules/xrange.js"></script>
+<script src="assets/highcharts-7.0.1/modules/tilemap.js"></script>
+<script src="assets/highcharts-7.0.1/modules/venn.js"></script>
+<script src="assets/highcharts-7.0.1/modules/gantt.js"></script>
+<script src="assets/highcharts-7.0.1/modules/timeline.js"></script>
+<script src="assets/highcharts-7.0.1/modules/parallel-coordinates.js"></script>
+<script src="assets/highcharts-7.0.1/plugins/grouped-categories.js"></script>
+<script src="assets/highcharts-7.0.1/plugins/motion.js"></script>
+<script src="assets/highcharts-7.0.1/plugins/multicolor_series.js"></script>
+<script src="assets/highcharts-7.0.1/custom/reset.js"></script>
+<script src="assets/highcharts-7.0.1/custom/symbols-extra.js"></script>
+<script src="assets/highcharts-7.0.1/custom/text-symbols.js"></script>
+<script src="assets/highchart-binding-0.7.0/highchart.js"></script>
+  <title>highchart</title>
+</head>
+<body style="background-color:white;">
+<div id="htmlwidget_container">
+  <div id="htmlwidget-490288a58fb6f5356789" style="width:100%;height:500px;" class="highchart html-widget"></div>
+</div>
+<script type="application/json" data-for="htmlwidget-490288a58fb6f5356789">{"x":{"hc_opts":{"title":{"text":"Top empresas con participación de mujeres"},"yAxis":{"title":{"text":" "},"plotLines":[{"value":"NULL","color":"black","dashStyle":"shortdash","width":2,"zIndex":5,"label":{"text":" ","style":{"color":"black"}}}],"labels":{"format":"{value:.,f}","formatter":"function() { return '' + Highcharts.numberFormat(this.value, 0, ',', '.') + '%'}"},"maxRange":100,"max":100},"credits":{"enabled":true,"text":""},"exporting":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"},"bar":{"colorByPoint":false,"stacking":"normal"},"column":{"colorByPoint":false,"stacking":"normal"}},"chart":{"type":"bar"},"subtitle":{"text":""},"xAxis":{"categories":["524 PARTICIPACOES S.A.","ALEF S.A.","BETAPART PARTICIPACOES S.A.","OPPORTUNITY ENERGIA E PARTICIPACOES S.A.","PROMPT PARTICIPACOES S.A.","SUDESTE S.A.","ATOM EMPREENDIMENTOS E PARTICIPAÇÕES S.A.","LOJAS HERING S.A.","METALGRAFICA IGUACU S.A.","VERT COMPANHIA SECURITIZADORA"],"title":{"text":"Empresa"},"allowDecimals":false,"plotLines":[{"value":"NULL","color":"black","dashStyle":"shortdash","zIndex":5,"width":2,"label":{"text":" ","style":{"color":"black"}}}],"type":"category"},"series":[{"name":"Hombres","data":[null,null,null,null,null,null,25,33,33,33]},{"name":"Mujeres","data":[100,100,100,100,100,100,75,67,67,67]}],"tooltip":{"useHTML":true,"pointFormat":"Porcentaje de <b>{series.name}<\/b> en la empresa <b>'{point.category}' <\/b>: <b>{point.y}%<\/b>","headerFormat":" "},"legend":{"enabled":true,"align":"right","verticalAlign":"bottom"}},"theme":{"colors":["#4B08B3","#0EA5B8","#562BFA","#662AAF","#1FACC6","#2BCEC1"],"chart":{"backgroundColor":"#FFFFFF","borderColor":"transparent","borderRadius":0,"borderWidth":0,"width":null,"height":null,"marginBottom":null,"marginLeft":null,"marginRight":null,"marginTop":null,"plotBackgroundColor":"transparent","plotBorderColor":"#cccccc","plotBorderWidth":1,"style":{"fontFamily":"Lato","fontSize":"11px"}},"plotOptions":{"bar":{"colorByPoint":true,"dataLabels":{"enabled":true,"style":{"color":"#0E0329","fontFamily":"Ubuntu","fontSize":null,"textDecoration":"none","textShadow":"none","textOutline":"none"}}},"column":{"colorByPoint":true,"dataLabels":{"enabled":true,"style":{"color":"#0E0329","fontFamily":"Ubuntu","fontSize":null,"textDecoration":"none","textShadow":"none","textOutline":"none"}}},"pie":{"showInLegend":false,"dataLabels":{"enabled":true,"style":{"color":"#0E0329","fontFamily":"Ubuntu","fontSize":null,"textDecoration":"none","textShadow":"none","textOutline":"none"}}},"series":{"dataLabels":{"enabled":true,"style":{"color":"#0E0329","fontFamily":"Ubuntu","fontSize":null,"textDecoration":"none","textShadow":"none","textOutline":"none"}},"lineWidth":2,"negativeColor":false,"pointStart":0,"marker":{"enabled":true}}},"xAxis":{"gridLineWidth":0,"lineColor":"#ccd6eb","tickColor":"#ccd6eb","gridLineColor":"#e6e6e6","tickLength":10,"lineWidth":1,"labels":{"style":{"color":"#666666","fontSize":"11px","fontWeight":null},"enabled":true},"title":{"style":{"color":"#666666","fontSize":"13px"}}},"yAxis":{"gridLineWidth":1,"lineColor":"#ccd6eb","tickColor":"#ccd6eb","gridLineColor":"#e6e6e6","tickLength":10,"lineWidth":1,"labels":{"style":{"color":"#666666","fontSize":"11px","fontWeight":null},"enabled":true},"title":{"style":{"color":"#666666","fontSize":"13px"}}}},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Opciones de descarga","decimalPoint":",","downloadJPEG":"Descarga en JPEG","downloadPDF":"Descarga en PDF","downloadPNG":"Descarga en PNG","downloadSVG":"Descarga en SVG","drillUpText":"Back to {series.name}","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbols":["k","M","G","T","P","E"],"printChart":"Imprimir Grafico","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"thousandsSep":".","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":["Lato","Ubuntu"],"debug":false},"evals":["hc_opts.yAxis.labels.formatter"],"jsHooks":[]}</script>
+<script type="application/htmlwidget-sizing" data-for="htmlwidget-490288a58fb6f5356789">{"viewer":{"width":"100%","height":350,"padding":0,"fill":true},"browser":{"width":"100%","height":500,"padding":0,"fill":true}}</script>
+</body>
+</html>

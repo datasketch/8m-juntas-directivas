@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551973964913.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D3671790",
+    "lastKnownWriteTime" : 1551974001,
+    "last_content_update" : 1551974001228,
+    "path" : "~/dsrepo/8m-juntas-directivas/latam.R",
+    "project_path" : "latam.R",
+    "properties" : {
+        "cursorPosition" : "157,0",
+        "scrollLine" : "137"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551973865261.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "91CF5106",
+    "lastKnownWriteTime" : 1551973363,
+    "last_content_update" : 1551973363,
+    "path" : "~/dsrepo/8m-juntas-directivas/all-charts.R",
+    "project_path" : "all-charts.R",
+    "properties" : {
+        "cursorPosition" : "150,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
