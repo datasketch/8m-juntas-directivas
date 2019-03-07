@@ -80,16 +80,16 @@ labels <- sprintf(
 
 
 providers <- c(
-  "Hydda.Base",
-  "Stamen.TonerLite",
-  "Esri.WorldTerrain",
-  "CartoDB.Positron",
-  "HikeBike.HikeBike",
-  "Wikimedia"
+  #"Hydda.Base",
+  #"Stamen.TonerLite",
+  "Esri.WorldTerrain"#,
+  #"CartoDB.Positron",
+  #"HikeBike.HikeBike",
+  #"Wikimedia"
 )
 
-for (i in  1:length(providers)){
-
+#for (i in  1:length(providers)){
+i <- 1
 provider <- providers[i]
 
 mapCan <- leaflet(dt) %>%
@@ -97,14 +97,17 @@ mapCan <- leaflet(dt) %>%
     zoomControl = FALSE,
     minZoom = 2, maxZoom = 2,
     dragging = FALSE
-    ))
+  ))
 
 m <- mapCan %>%
-  addPolygons(stroke = FALSE,
-              smoothFactor = 0.3,
-              fillOpacity = 1,
-              fillColor = ~pal(prop),
-              popup = labels
+  addPolygons(#stroke = FALSE,
+    smoothFactor = 0.3,
+    fillOpacity = 1,
+    fillColor = ~pal(prop),
+    popup = labels,
+    weight = 1,
+    opacity = 1,
+    color = '#F2F3F7'
   ) %>%
   addLegend(pal = pal,
             title = "",
@@ -112,9 +115,24 @@ m <- mapCan %>%
             values = ~prop,
             opacity = 1.0,
             labFormat = labelFormat(prefix = "", suffix = "%"))
+
+
+centroides <- read_csv(system.file("geodata/world/world-countries.csv",package = "geodata"))
+dm <- inner_join(mujeres, centroides)
+m <- m %>%
+  addCircleMarkers(lng = dm$lon,
+                   lat = dm$lat,
+                   radius = dm$prop/3,
+                   color = "#FFCE00",
+                   opacity = 0,
+                   fillColor = "#FFCE00",
+                   popup = labels,
+                   fillOpacity = 1)
+
+
 m
 saveWidget(m, paste0("map_",i,".html"))
-}
+#}
 
 
 
