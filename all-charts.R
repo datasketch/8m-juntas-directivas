@@ -16,7 +16,7 @@ countries <- unique(x0$País)
 
 
 for (country in countries) {
-
+  country <- 'Colombia'
 
   x <- x0 %>% filter(País == country) %>%
     rename(Género = `Género (f, m, nb, nd)`)
@@ -24,7 +24,7 @@ for (country in countries) {
   table(x$Género)
 
   x <- x %>%
-    filter(Género != "nd")
+    filter(Género %in% c("Mujeres", "Hombres"))
 
 
   mytheme <- tma(
@@ -34,7 +34,12 @@ for (country in countries) {
                 "#562BFA",
                 "#662AAF",
                 "#1FACC6","#2BCEC1"),
-    fontFamily = "Lato"
+    fontFamily = "Lato",
+    stylesY = list(gridLineWidth = 0),
+    stylesLabelX = list(color = "#666666",
+                        fontSize = "15px", enabled = TRUE),
+    stylesLabelY = list(enabled = F),
+    labsData = list(colLabel = "#0E0329", familyLabel = "Lato")
   )
 
 
@@ -50,8 +55,19 @@ for (country in countries) {
     summarise(n_emp = n())
 
   h <- hgch_bar_CatNum(d, verLabel = "Número de empresas", horLabel = "Número de consejeras mujeres",
+                       tooltip =list(headerFormat = NULL, pointFormat = "<b>{point.name} consejeras mujeres en {point.y} empresas</b>"),
                        title = "",
-                       theme = mytheme)
+                       theme = tma(
+                         background = "#FFFFFF",
+                         colores = c("#662AAF"),
+                         fontFamily = "Lato",
+                         diffColorsBar = F,
+                         stylesY = list(gridLineWidth = 0),
+                         stylesLabelX = list(color = "#666666",
+                                             fontSize = "15px", enabled = TRUE),
+                         stylesLabelY = list(enabled = F),
+                         labsData = list(colLabel = "#0E0329", familyLabel = "Lato")
+                       ))
   h
   saveWidget(h, paste0("countries/",mop::create_slug(country),"_1.html"), selfcontained = FALSE, libdir = "countries/assets")
 
@@ -60,30 +76,30 @@ for (country in countries) {
   # Cantidad de hombres por cada mujer (promedio 7),
 
 
-  d0 <- x %>%
-    select(Género, Empresa) %>%
-    group_by(Empresa) %>%
-    summarise(n_h_por_m = sum(Género == "Hombres")/sum(Género == "Mujeres")) %>%
-    mutate(paridad = ifelse(n_h_por_m <= 1, 0, floor(n_h_por_m))) %>%
-    mutate(paridad2 = ifelse(paridad == 0, "Mayoría mujeres o paridad",
-                             ifelse(is.infinite(paridad), "Solo hombres",
-                                    ifelse(paridad == 1, "Más de 1",
-                                           paste0("Más de ",paridad, ""))))) %>%
-    arrange(paridad) %>%
-    group_by(paridad, paridad2) %>%
-    summarise(n_emp = n()) %>%
-    ungroup()
-
-  d <- d0 %>% select(paridad2, n_emp) %>% ungroup()
-
-  h <- hgch_bar_CatNum(d, verLabel = "Número de empresas", horLabel = "Número de hombres por mujer",
-                       title = "",
-                       order2 = unique(d$paridad2),
-                       labelWrapV = c(80, 80),
-                       theme = mytheme)
-
-  h
-  saveWidget(h, paste0("countries/",mop::create_slug(country),"_2.html"), selfcontained = FALSE, libdir = "countries/assets")
+  # d0 <- x %>%
+  #   select(Género, Empresa) %>%
+  #   group_by(Empresa) %>%
+  #   summarise(n_h_por_m = sum(Género == "Hombres")/sum(Género == "Mujeres")) %>%
+  #   mutate(paridad = ifelse(n_h_por_m <= 1, 0, floor(n_h_por_m))) %>%
+  #   mutate(paridad2 = ifelse(paridad == 0, "Mayoría mujeres o paridad",
+  #                            ifelse(is.infinite(paridad), "Solo hombres",
+  #                                   ifelse(paridad == 1, "Más de 1",
+  #                                          paste0("Más de ",paridad, ""))))) %>%
+  #   arrange(paridad) %>%
+  #   group_by(paridad, paridad2) %>%
+  #   summarise(n_emp = n()) %>%
+  #   ungroup()
+  #
+  # d <- d0 %>% select(paridad2, n_emp) %>% ungroup()
+  #
+  # h <- hgch_bar_CatNum(d, verLabel = "Número de empresas", horLabel = "Número de hombres por mujer",
+  #                      title = "",
+  #                      order2 = unique(d$paridad2),
+  #                      labelWrapV = c(80, 80),
+  #                      theme = mytheme)
+  #
+  # h
+  # saveWidget(h, paste0("countries/",mop::create_slug(country),"_2.html"), selfcontained = FALSE, libdir = "countries/assets")
 
 
   # cantidad de mujeres en más de una empresa (promedio 4)
@@ -111,10 +127,10 @@ for (country in countries) {
     select(-prop)
 
   h <- hgch_bar_CatCatNum(d,
-                          title = "Top empresas con participación de mujeres",
+                          #title = "Top empresas con participación de mujeres",
                           tooltip = list(headerFormat = NULL, pointFormat = "Porcentaje de <b>{series.name}</b> en la empresa <b>'{point.category}' </b>: <b>{point.y}%</b>"),
                           orientation = "hor",
-                          labelWrapV = c("12", "70"),
+                          labelWrapV = c("12", "300"),
                           horLabel = " ",
                           graphType = "stacked",
                           percentage = TRUE,
@@ -132,10 +148,10 @@ for (country in countries) {
     select(-prop)
 
   h <- hgch_bar_CatCatNum(d,
-                          title = "Bottom empresas con participación de mujeres",
+                          #title = "Bottom empresas con participación de mujeres",
                           tooltip = list(headerFormat = NULL, pointFormat = "Porcentaje de <b>{series.name}</b> en la empresa <b>'{point.category}' </b>: <b>{point.y}%</b>"),
                           orientation = "hor",
-                          labelWrapV = c("12", "20"),
+                          labelWrapV = c("12", "300"),
                           horLabel = " ",
                           graphType = "stacked",
                           percentage = TRUE,
@@ -148,3 +164,4 @@ for (country in countries) {
 
 
 }
+

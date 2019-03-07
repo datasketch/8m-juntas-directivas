@@ -23,6 +23,26 @@ total <- total[-1,]
 total <- total %>% plyr::rename(c("País" = "name_esp", "Género (f, m, nb, nd)" = "genero"))
 total$genero <- plyr::revalue(total$genero, c("f" = "Mujeres", "m" = "Hombres"))
 
+orderTot <- total %>% group_by(name_esp, genero)%>% arrange(-total)
+h <- hgch_bar_CatCatNum(orderTot,
+                   orientation = "hor",
+                  graphType = "stacked", percentage = TRUE,
+                   order2 = unique(orderTot$name_esp),
+                  horLabel = " ",  verLabel = " ",
+                  theme = tma(
+                    background = "#FFFFFF",
+                    colores = c("#00cab9", "#eb004a"),
+                    fontFamily = "Lato",
+                    #fontSize = "20px",
+                    stylesY = list(gridLineWidth = 0),
+                    stylesLabelX = list(color = "#666666",
+                                        fontSize = "15px", enabled = TRUE),
+                    stylesLabelY = list(enabled = F),
+                    labsData = list(colLabel = "#0E0329", familyLabel = "Lato")
+                  ))
+h
+saveWidget(h, "allCountries.html", selfcontained = FALSE, libdir = "countries/assets")
+
 
 total <- total %>% group_by(name_esp) %>% mutate(prop = round(total/sum(total)*100, 2))
 
