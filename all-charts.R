@@ -16,10 +16,10 @@ countries <- unique(x0$País)
 x0 <- x0 %>% filter(País %in% countries[c(1:15)])
 
 for (country in countries) {
- country <- countries[1]
+ #country <- countries[1]
   x <- x0 %>% filter(País == country) %>%
     rename(Género = `Género (f, m, nb, nd)`)
-  x$Género <- plyr::revalue(x$Género, c("f" = "Mujeres", "m" = "Hombres"))
+  x$Género <- plyr::revalue(x$Género, c("f" = "Mujeres", "m" = "Hombres", "nd" = "Hombres"))
   table(x$Género)
 
   country <- tolower(gsub(" ", "",country))
@@ -125,20 +125,24 @@ for (country in countries) {
 
   d0 <- x %>%
     group_by(Género, Empresa) %>%
-    summarise(total = n())  %>% filter(Género != "nd") %>%
-    group_by(Empresa) %>% mutate(prop = round(total/sum(total)*100, 2))
+    summarise(total = n()) %>%
+    arrange(Empresa) %>%
+    spread(Género, total, fill = 0) %>%
+    gather(Género, total,-Empresa) %>% #filter(Género != "nd") %>%
+    group_by(Empresa) %>% mutate(prop = round(total/sum(total)*100, 2)) %>%
+    select(Género, Empresa, prop)
 
   empresasTop <- d0 %>% filter(Género == "Mujeres") %>% ungroup() %>%
     arrange(desc(prop)) %>%
     slice(1:10) %>% pull(Empresa)
   empresasBottom <-  d0 %>% filter(Género == "Mujeres") %>% ungroup() %>%
     arrange(prop) %>%
-    slice(1:10) %>% pull(Empresa)
+    slice(10:1) %>% pull(Empresa)
 
   d <- d0 %>%
     filter(Empresa %in% empresasTop) %>%
-    arrange(prop) %>%
-    select(-prop)
+    arrange(prop) #%>%
+    #select(-prop)
 
   h <- hgch_bar_CatCatNum(d,
                           #title = "Top empresas con participación de mujeres",
@@ -164,8 +168,8 @@ for (country in countries) {
 
   d <- d0 %>%
     filter(Empresa %in% empresasBottom) %>%
-    arrange(prop) %>%
-    select(-prop)
+    arrange(prop) #%>%
+    #select(-prop)
 
   h <- hgch_bar_CatCatNum(d,
                           #title = "Bottom empresas con participación de mujeres",

@@ -65,7 +65,7 @@ h <- h %>% hc_plotOptions(
   )
 
 h
-saveWidget(h, paste0("countries/",mop::create_slug("allCountries"),"_1.html"), selfcontained = FALSE, libdir = "countries/assets")
+saveWidget(h, paste0("",mop::create_slug("allCountries"),"_1.html"), selfcontained = FALSE, libdir = "assets")
 
 
 
