@@ -23,6 +23,44 @@ total <- total[-1,]
 total <- total %>% plyr::rename(c("País" = "name_esp", "Género (f, m, nb, nd)" = "genero"))
 total$genero <- plyr::revalue(total$genero, c("f" = "Mujeres", "m" = "Hombres"))
 
+orderTot <- total %>% group_by(name_esp, genero)%>% arrange(-total)
+h <- hgch_bar_CatCatNum(orderTot,
+                        tooltip = list(headerFormat = NULL,
+                                       pointFormat = "Total de <b>{series.name} en juntas directivas </b> en <b>'{point.category}' </b>: <b>{point.y}%</b>"),
+                   orientation = "hor",
+                  graphType = "stacked", percentage = TRUE,
+                   order2 = unique(orderTot$name_esp),
+                  horLabel = " ",  verLabel = " ",
+                  theme =  tma(
+                    background = "#FFFFFF",
+                    colores = c("#4B08B3",
+                                "#0EA5B8",
+                                "#562BFA",
+                                "#662AAF",
+                                "#1FACC6","#2BCEC1"),
+                    fontFamily = "Lato",
+                    fontSize = "13px",
+                    plotBorderWidth = 0,
+                    bordercolor = "transparent",
+                    stylesTitleX = list(color = "#666666", fontSize = "17px"),
+                    stylesTitleY = list(color = "#666666", fontSize = "17px"),
+                    stylesY = list(gridLineWidth = 0),
+                    stylesX = list(gridLineWidth = 0),
+                    stylesLabelX = list(color = "#666666",
+                                        fontSize = "15px", enabled = TRUE),
+                    stylesLabelY = list(enabled = F),
+                    labsData = list(colLabel = JS("(Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'"), familyLabel = "Lato")
+                  )) %>%
+  hc_plotOptions(
+    bar = list(
+      dataLabels = list(
+        format= '{y}%'
+      )))
+
+h
+saveWidget(h, "allCountries.html",
+           selfcontained = FALSE)
+
 
 total <- total %>% group_by(name_esp) %>% mutate(prop = round(total/sum(total)*100, 2))
 
@@ -80,16 +118,16 @@ labels <- sprintf(
 
 
 providers <- c(
-  "Hydda.Base",
-  "Stamen.TonerLite",
-  "Esri.WorldTerrain",
-  "CartoDB.Positron",
-  "HikeBike.HikeBike",
-  "Wikimedia"
+  #"Hydda.Base",
+  #"Stamen.TonerLite",
+  "Esri.WorldTerrain"#,
+  #"CartoDB.Positron",
+  #"HikeBike.HikeBike",
+  #"Wikimedia"
 )
 
-for (i in  1:length(providers)){
-
+#for (i in  1:length(providers)){
+i <- 1
 provider <- providers[i]
 
 mapCan <- leaflet(dt) %>%
@@ -97,14 +135,17 @@ mapCan <- leaflet(dt) %>%
     zoomControl = FALSE,
     minZoom = 2, maxZoom = 2,
     dragging = FALSE
-    ))
+  ))
 
 m <- mapCan %>%
-  addPolygons(stroke = FALSE,
-              smoothFactor = 0.3,
-              fillOpacity = 1,
-              fillColor = ~pal(prop),
-              popup = labels
+  addPolygons(#stroke = FALSE,
+    smoothFactor = 0.3,
+    fillOpacity = 1,
+    fillColor = ~pal(prop),
+    popup = labels,
+    weight = 1,
+    opacity = 1,
+    color = '#F2F3F7'
   ) %>%
   addLegend(pal = pal,
             title = "",
@@ -112,9 +153,24 @@ m <- mapCan %>%
             values = ~prop,
             opacity = 1.0,
             labFormat = labelFormat(prefix = "", suffix = "%"))
+
+
+centroides <- read_csv(system.file("geodata/world/world-countries.csv",package = "geodata"))
+dm <- inner_join(mujeres, centroides)
+m <- m %>%
+  addCircleMarkers(lng = dm$lon,
+                   lat = dm$lat,
+                   radius = dm$prop/3,
+                   color = "#FFCE00",
+                   opacity = 0,
+                   fillColor = "#FFCE00",
+                   popup = labels,
+                   fillOpacity = 1)
+
+
 m
 saveWidget(m, paste0("map_",i,".html"))
-}
+#}
 
 
 
