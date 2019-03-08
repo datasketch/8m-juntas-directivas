@@ -16,7 +16,7 @@ countries <- unique(x0$País)
 x0 <- x0 %>% filter(País %in% countries[c(1:15)])
 
 for (country in countries) {
- # country <- countries[1]
+ country <- countries[1]
   x <- x0 %>% filter(País == country) %>%
     rename(Género = `Género (f, m, nb, nd)`)
   x$Género <- plyr::revalue(x$Género, c("f" = "Mujeres", "m" = "Hombres"))
@@ -34,7 +34,8 @@ for (country in countries) {
                 "#0EA5B8",
                 "#562BFA",
                 "#662AAF",
-                "#1FACC6","#2BCEC1"),
+                "#1FACC6",
+                "#2BCEC1"),
     fontFamily = "Lato",
     fontSize = "13px",
     plotBorderWidth = 0,
@@ -44,9 +45,9 @@ for (country in countries) {
     stylesY = list(gridLineWidth = 0),
     stylesX = list(gridLineWidth = 0),
     stylesLabelX = list(color = "#666666",
-                        fontSize = "15px", enabled = TRUE),
+                        fontSize = "11px", enabled = TRUE),
     stylesLabelY = list(enabled = F),
-    labsData = list(colLabel = JS("(Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'"), familyLabel = "Lato")
+    labsData = list(colLabel = "contrast", familyLabel = "Lato", sizeLabel = NULL, textDecoration = "none")
   )
 
 
@@ -62,7 +63,7 @@ for (country in countries) {
     summarise(n_emp = n())
 
   h <- hgch_bar_CatNum(d, verLabel = "Número de empresas", horLabel = "Número de consejeras mujeres",
-                       tooltip =list(headerFormat = NULL, pointFormat = "<b>{point.name} consejeras mujeres en {point.y} empresas</b>"),
+                       tooltip =list(headerFormat = NULL, pointFormat = "<b>{point.y}</b> empresas</b> tienen <b>{point.name}</b> consejeras"),
                        title = "",
                        theme = tma(
                          fontSize = "17px",
@@ -80,6 +81,7 @@ for (country in countries) {
                          stylesTitleY = list(color = "#666666", fontSize = "17px"),
                          labsData = list(colLabel = "#0E0329", familyLabel = "Lato")
                        ))
+
   h
   saveWidget(h, paste0("countries/",mop::create_slug(country),"_1.html"), selfcontained = FALSE, libdir = "countries/assets")
 

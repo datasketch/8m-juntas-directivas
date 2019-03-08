@@ -26,16 +26,17 @@ total$genero <- plyr::revalue(total$genero, c("f" = "Mujeres", "m" = "Hombres"))
 orderTot <- total %>% group_by(name_esp, genero)%>% arrange(-total)
 h <- hgch_bar_CatCatNum(orderTot,
                         tooltip = list(headerFormat = NULL,
-                                       pointFormat = "Total de <b>{series.name} en juntas directivas </b> en <b>'{point.category}' </b>: <b>{point.y}%</b>"),
-                   orientation = "hor",
-                  graphType = "stacked", percentage = TRUE,
+                                       pointFormat = "Total de <b>{series.name} en juntas directivas </b> en <b>'{point.category}' </b>: <b>{point.y}</b>"),
+                  # orientation = "hor",
+                  graphType = "stacked",
+                  #percentage = TRUE,
                    order2 = unique(orderTot$name_esp),
                   horLabel = " ",  verLabel = " ",
-                  theme =  tma(
+                  theme =  tma(height = "auto",
                     background = "#FFFFFF",
-                    colores = c("#4B08B3",
-                                "#0EA5B8",
+                    colores = c("#008075",#"#0EA5B8",
                                 "#562BFA",
+                                "#4B08B3",
                                 "#662AAF",
                                 "#1FACC6","#2BCEC1"),
                     fontFamily = "Lato",
@@ -47,28 +48,37 @@ h <- hgch_bar_CatCatNum(orderTot,
                     stylesY = list(gridLineWidth = 0),
                     stylesX = list(gridLineWidth = 0),
                     stylesLabelX = list(color = "#666666",
-                                        fontSize = "15px", enabled = TRUE),
+                                        fontSize = "13px", enabled = TRUE),
                     stylesLabelY = list(enabled = F),
-                    labsData = list(colLabel = JS("(Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'"), familyLabel = "Lato")
-                  )) %>%
-  hc_plotOptions(
-    bar = list(
-      dataLabels = list(
-        format= '{y}%'
-      )))
+                    labsData = list(colLabel = "contrast", familyLabel = "Lato", sizeLabel = NULL, textDecoration = "none")
+                  )) #%>%
+  # hc_plotOptions(
+  #   bar = list(
+  #     dataLabels = list(
+  #       format= '{y}%'
+  #     )))
+
+h <- h %>% hc_plotOptions(
+    column = list(
+      stacking = 'percent'
+  )
+  )
 
 h
-saveWidget(h, "allCountries.html",
-           selfcontained = FALSE)
+saveWidget(h, paste0("countries/",mop::create_slug("allCountries"),"_1.html"), selfcontained = FALSE, libdir = "countries/assets")
+
 
 
 total <- total %>% group_by(name_esp) %>% mutate(prop = round(total/sum(total)*100, 2))
 
+popp <- read_csv("data/control_datasets - Hoja 1.csv")
+popp$País <- gsub("Guate", "Guatemala", popp$País)
+popp$País <- gsub("Peru", "Perú", popp$País)
+total <- left_join(total, popp, by = c("name_esp" = "País"))
 
-
-total$titulo <- "Esto es un título"
-total$descripcion <- "Esto es una descripción"
-total$link <- "acá va un link"
+# total$titulo <- "Esto es un título"
+# total$descripcion <- "Esto es una descripción"
+# total$link <- "acá va un link"
 total$name <- plyr::revalue(total$name_esp,
                             c("México" = "Mexico",
                               "Panamá" = "Panama",
@@ -100,22 +110,30 @@ dt <- geojsonio::topojson_read("8m-juntas-mujeres.topojson")
 
 
 dt@data <- dt@data %>% left_join(mujeres, by = "name")
-dt@data$name_esp[is.na(dt@data$name_esp)] <- " "
-#dt@data$prop[is.na(dt@data$prop)] <- " "
-dt@data$titulo[is.na(dt@data$titulo)] <- "Sin información"
-dt@data$descripcion[is.na(dt@data$descripcion)] <- " "
-dt@data$link[is.na(dt@data$link)] <- " "
+dt@data$Encabezado[is.na(dt@data$Encabezado)] <- " "
+dt@data$Encabezado <- gsub("%", "&#37", dt@data$Encabezado)
+dt@data$Partner[is.na(dt@data$Partner)] <- " "
+dt@data$`Enlace nota`[is.na(dt@data$`Enlace nota`)] <- " "
+dt@data$`Enlace nota` <- gsub("%", "&#37", dt@data$`Enlace nota`)
+dt@data$nameId <- tolower(gsub(" ", "" ,dt@data$name))
+dt@data$nameId <- gsub("brazil", "brasil", dt@data$nameId)
+dt@data$nameId <- gsub("spain", "españa", dt@data$nameId)
+# dt@data$link[is.na(dt@data$link)] <- " "
 
 pale <- c('#DDA0DD', '#4900a3')
 pal <- colorNumeric(pale,
                     domain = dt@data$prop, na.color = '#CCCCCC')
 
-
 labels <- sprintf(
-  paste0('<p>', dt@data$name_esp, '</span></br>','Mujeres en juntas directivas: ',dt@data$prop, '&#37</br>', dt@data$titulo, '</br>',
-         dt@data$descripcion, '</br>', dt@data$link ,'</p>'
+  paste0("<h4 style='font-family: &quot;Exo 2&quot;font-weight: bold;'>", dt@data$name_esp, "</h4><p><b>",
+         dt@data$prop,"&#37</b> de asientos ocupados por consejeras</p>
+         <p style='font-size:11px;display:block;margin-bottom:2rem'><b>&quot;",
+         dt@data$Encabezado, "&quot; -", dt@data$Partner, "</b></p>
+           <a style='margin-right:0.5rem; text-decoration: none;position: relative;
+          color: #4900A3;' href='",dt@data$`Enlace nota`,"'  target='_newtab'>Leer</a>
+           <a style='margin-right:0.5rem;text-decoration: none;position: relative;
+          color: #4900A3;' href='https://www.mujeresenlabolsa.org/staging/pais.html#", tolower(dt@data$nameId),"' target='_top'><b> Ver más</a></b></a>"
   )) %>% lapply(htmltools::HTML)
-
 
 providers <- c(
   #"Hydda.Base",
@@ -132,10 +150,12 @@ provider <- providers[i]
 
 mapCan <- leaflet(dt) %>%
   addProviderTiles(provider, options = providerTileOptions(
+    scrollwheelzoom = FALSE,
     zoomControl = FALSE,
-    minZoom = 2, maxZoom = 2,
+    minZoom = 3, maxZoom = 3,
     dragging = FALSE
-  ))
+  )) %>%
+  setView(lng = -60, lat = -7, zoom = 3)
 
 m <- mapCan %>%
   addPolygons(#stroke = FALSE,
@@ -167,8 +187,8 @@ m <- m %>%
                    popup = labels,
                    fillOpacity = 1)
 
-
-m
+library(leaflet.extras)
+m %>% suspendScroll(sleep = F, sleepNote = F)
 saveWidget(m, paste0("map_",i,".html"))
 #}
 
