@@ -30,15 +30,13 @@ h <- hgch_bar_CatCatNum(orderTot,
                   # orientation = "hor",
                   graphType = "stacked",
                   #percentage = TRUE,
+                  order1 = c("Mujeres", "Hombres"),
                    order2 = unique(orderTot$name_esp),
                   horLabel = " ",  verLabel = " ",
-                  theme =  tma(height = "auto",
+                  theme =  tma(
                     background = "#FFFFFF",
-                    colores = c("#008075",#"#0EA5B8",
-                                "#562BFA",
-                                "#4B08B3",
-                                "#662AAF",
-                                "#1FACC6","#2BCEC1"),
+                    colores = c("#4B08B3",
+                                "#008075"),
                     fontFamily = "Lato",
                     fontSize = "13px",
                     plotBorderWidth = 0,
@@ -53,16 +51,18 @@ h <- hgch_bar_CatCatNum(orderTot,
                     labsData = list(colLabel = "contrast", familyLabel = "Lato", sizeLabel = NULL, textDecoration = "none")
                   )) #%>%
   # hc_plotOptions(
-  #   bar = list(
+  #   column = list(
   #     dataLabels = list(
-  #       format= '{y}%'
+  #       inside = F
+  #       #format= '{y}%'
   #     )))
 
-h <- h %>% hc_plotOptions(
-    column = list(
-      stacking = 'percent'
-  )
-  )
+h
+# h <- h %>% hc_plotOptions(
+#     column = list(
+#       stacking = 'percent'
+#   )
+#   )
 
 h
 saveWidget(h, paste0("",mop::create_slug("allCountries"),"_1.html"), selfcontained = FALSE, libdir = "assets")
@@ -124,15 +124,17 @@ pale <- c('#DDA0DD', '#4900a3')
 pal <- colorNumeric(pale,
                     domain = dt@data$prop, na.color = '#CCCCCC')
 
+classMap <- ".btn {padding: 0.5rem 1rem;font-family: 'Lato';font-size: 90%;text-transform: uppercase;letter-spacing: .15rem;border: 0;font-weight: bold;transition: 0.3s;}"
+
 labels <- sprintf(
-  paste0("<h4 style='font-family: &quot;Exo 2&quot;font-weight: bold;'>", dt@data$name_esp, "</h4><p><b>",
+  paste0("<h4>", dt@data$name_esp, "</h4><p><b>",
          dt@data$prop,"&#37</b> de asientos ocupados por consejeras</p>
          <p style='font-size:11px;display:block;margin-bottom:2rem'><b>&quot;",
          dt@data$Encabezado, "&quot; -", dt@data$Partner, "</b></p>
-           <a style='margin-right:0.5rem; text-decoration: none;position: relative;
+           <a class='btn btnprimary' style='margin-right:0.5rem; text-decoration: none;position: relative;
           color: #4900A3;' href='",dt@data$`Enlace nota`,"'  target='_newtab'>Leer</a>
-           <a style='margin-right:0.5rem;text-decoration: none;position: relative;
-          color: #4900A3;' href='https://www.mujeresenlabolsa.org/staging/pais.html#", tolower(dt@data$nameId),"' target='_top'><b> Ver más</a></b></a>"
+           <a class='btn btnsecondary' style='margin-right:0.5rem;text-decoration: none;position: relative;
+          color: #4900A3;' href='https://www.mujeresenlabolsa.org/pais.html#", tolower(dt@data$nameId),"' target='_top'><b> Ver más</a></b></a>"
   )) %>% lapply(htmltools::HTML)
 
 providers <- c(
@@ -150,7 +152,7 @@ provider <- providers[i]
 
 mapCan <- leaflet(dt) %>%
   addProviderTiles(provider, options = providerTileOptions(
-    scrollwheelzoom = FALSE,
+    scrollWheelZoom = FALSE,
     zoomControl = FALSE,
     minZoom = 3, maxZoom = 3,
     dragging = FALSE
@@ -187,9 +189,78 @@ m <- m %>%
                    popup = labels,
                    fillOpacity = 1)
 
-library(leaflet.extras)
-m %>% suspendScroll(sleep = F, sleepNote = F)
-saveWidget(m, paste0("map_",i,".html"))
+
+
+
+m <- browsable(
+  tagList(list(
+    tags$head(
+      # you'll need to be very specific
+      tags$style("
+h1, h2, h3, h4, h5, h6 { font-family: 'Exo 2', sans-serif;
+                 font-weight: bold;
+                 }
+                 body {
+                 font-family: 'Lato';
+                 }
+                 a, a:visited {
+                 text-decoration: none;
+                 position: relative;
+                 color: #4900A3;
+                 }
+                 a:focus, a:hover {
+                 text-decoration: none;
+                 color: #4900A3;
+                 }
+                 a:hover:after, a:visited:hover:after {
+                 width: 100%;
+                 }
+                 .btn {
+                 padding: 0.5rem 1rem;
+                 font-family: 'Lato';
+                 font-size: 90%;
+                 text-transform: uppercase;
+                 letter-spacing: .15rem;
+                 border: 0;
+                 font-weight: bold;
+                 transition: 0.3s;
+                 }
+                 a.btn:after, a.btn:visited:after {
+                 content: none;
+                 }
+                 .btnprimary {
+                 color: #fff !important;
+                 background-color: #4900A3;
+                 text-align: center;
+                 padding-left: 2rem;
+                 padding-right: 2rem;
+                 }
+                 .btnprimary:hover, .btnprimary:focus, .btnprimary:active {
+                 background-color: #3700E1 !important;
+                 }
+                 .btnsecondary {
+                 color: #4900A3 !important;
+                 background-color: transparent;
+                 text-align: center;
+                 border: 1px solid #d2d2d2;
+                 }
+                 .btnsecondary:hover, .btnsecondary:focus, .btnsecondary:active {
+                 background-color: #d2d2d2 !important;
+                 }
+                 ")
+      # could also use url
+      #tags$link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",rel="stylesheet")
+    ),
+    m
+  ))
+)
+
+save_html(m, "mapa.html")
+
+# write_lines(m, "mapa.html")
+# saveWidget(m, paste0("countries/",mop::create_slug("mapa"),"_1.html"), selfcontained = FALSE, libdir = "countries/assets")
+#
+# saveWidget(m, paste0("map_",i,".html"))
 #}
 
 
