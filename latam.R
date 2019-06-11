@@ -11,6 +11,8 @@ library(leaflet)
 library(geodata)
 library(leaflet.minicharts)
 library(htmlwidgets)
+library(htmltools)
+library(hgchmagic)
 
 juntas <- read_csv("data/Todas las mujeres - Consejeres.csv")
 
